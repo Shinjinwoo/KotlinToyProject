@@ -9,7 +9,9 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.toyproject.retrofit.RetrofitManager
 import com.example.toyproject.utils.Constants.TAG
+import com.example.toyproject.utils.RESPONSE_STATE
 import com.example.toyproject.utils.SEARCH_TYPE
 import com.example.toyproject.utils.onMyTextChanged
 import kotlinx.android.synthetic.main.activity_main.*
@@ -66,8 +68,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // 검색 버튼 클릭시
         btn_search.setOnClickListener{
             Log.d(TAG,"MainActivity - 검색 버튼이 클릭됨 / currentSearchType : $currentSearchType")
+
+            //검색 API 호출
+            RetrofitManager.instance.searchPhotos(searchTerm = search_term_edit_text.toString(), completion = {
+                responseState,responseBody ->
+                when(responseState){
+                    RESPONSE_STATE.SUCCESS -> {
+                        Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseBody")
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Toast.makeText(this,"서버 리스폰스 에러 입니다.",Toast.LENGTH_SHORT).show()
+                        Log.d(TAG,"MainActivity - 서버 리스폰스 실패 : $responseBody")
+                    }
+                }
+            })
             this.handleSearchButtonUi()
         }
     }
