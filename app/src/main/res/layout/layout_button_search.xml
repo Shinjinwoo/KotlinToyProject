@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:visibility="visible"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:text="검은색"
+        android:textStyle="bold"
+        android:clickable="true"
+        />
+    <ProgressBar
+        android:layout_marginTop="5dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        />
+
+
+</FrameLayout>
