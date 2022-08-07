@@ -1,6 +1,8 @@
 package com.example.toyproject.retrofit
 
 import android.util.Log
+import android.widget.Toast
+import com.example.toyproject.application.App
 import com.example.toyproject.utils.API
 import com.example.toyproject.utils.Constants.TAG
 import com.example.toyproject.utils.isJsonArray
@@ -70,7 +72,15 @@ object RetrofitClient {
                     .method(originalRequest.method, originalRequest.body)
                     .build()
 
-                return chain.proceed(resultRequest)
+                //return chain.proceed(resultRequest)
+
+                var response = chain.proceed(resultRequest)
+
+                if ( response.code != 200) {
+                    Toast.makeText(App.instance,"${response.code} 에러입니다.",Toast.LENGTH_SHORT).show()
+                }
+
+
             }
         })
 
