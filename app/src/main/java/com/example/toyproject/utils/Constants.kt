@@ -11,7 +11,8 @@ enum class SEARCH_TYPE {
 
 enum class RESPONSE_STATE {
     SUCCESS,
-    FAIL
+    FAIL,
+    NO_COUNT
 }
 
 object API {

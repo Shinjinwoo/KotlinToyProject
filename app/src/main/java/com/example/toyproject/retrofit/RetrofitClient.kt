@@ -79,7 +79,6 @@ object RetrofitClient {
                 var response = chain.proceed(resultRequest)
 
                 if ( response.code != 200) {
-
                     //Toast -> UI 스레드에서 돌려야함
                     Handler(Looper.getMainLooper()).post{
                         Toast.makeText(App.instance,"${response.code} 에러입니다.",Toast.LENGTH_SHORT).show()

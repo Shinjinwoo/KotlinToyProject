@@ -1,11 +1,10 @@
 package com.example.toyproject
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -72,16 +71,32 @@ class MainActivity : AppCompatActivity() {
         btn_search.setOnClickListener{
             Log.d(TAG,"MainActivity - 검색 버튼이 클릭됨 / currentSearchType : $currentSearchType")
 
+            var userSearchInput = search_term_edit_text.text.toString()
             //검색 API 호출
-            RetrofitManager.instance.searchPhotos(searchTerm = search_term_edit_text.toString(), completion = {
-                responseState,responseBody ->
+            RetrofitManager.instance.searchPhotos(searchTerm = userSearchInput , completion = {
+                responseState,responseDataArrayList ->
                 when(responseState){
                     RESPONSE_STATE.SUCCESS -> {
-                        Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseBody")
+                        Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size")
+                        var intent = Intent(this,PhotoCollectionActivity::class.java)
+                        var bundle = Bundle()
+
+                        bundle.putSerializable("photo_array_list",responseDataArrayList)
+
+
+                        intent.putExtra("array_bundle",bundle)
+                        intent.putExtra("search_term",userSearchInput)
+
+                        startActivity(intent)
+
                     }
                     RESPONSE_STATE.FAIL -> {
                         Toast.makeText(this,"서버 리스폰스 에러 입니다.",Toast.LENGTH_SHORT).show()
-                        Log.d(TAG,"MainActivity - 서버 리스폰스 실패 : $responseBody")
+                        Log.d(TAG,"MainActivity - 서버 리스폰스 실패 : $responseDataArrayList")
+                    }
+                    RESPONSE_STATE.NO_COUNT -> {
+                        Toast.makeText(this,"검색결과가 없습니다.",Toast.LENGTH_SHORT).show()
+                        Log.d(TAG,"MainActivity - 검색결과가 없습니다. : $responseDataArrayList")
                     }
                 }
             })
