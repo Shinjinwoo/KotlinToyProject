@@ -6,11 +6,15 @@
         <entry key="..\:/ToyProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1645" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_cake_24.xml" value="0.1645" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.163" />
+        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.1495" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_photo_library_24.xml" value="0.1645" />
+        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.1495" />
+        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1495" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1645" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_user.xml" value="0.1645" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/rounded_bg_gray.xml" value="0.163" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/rounded_bg_pink.xml" value="0.163" />
+        <entry key="..\:/ToyProject/app/src/main/res/drawable/unsplash_icon.xml" value="0.1495" />
         <entry key="..\:/ToyProject/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/ToyProject/app/src/main/res/layout/activity_photo_collection.xml" value="0.18" />
         <entry key="..\:/ToyProject/app/src/main/res/layout/layout_button_search.xml" value="0.25" />
