@@ -8,15 +8,17 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:liftOnScrollTargetViewId="@id/my_photo_recyclerview"
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="사진검색"
+            app:title="사진 검색"
             app:menu="@menu/top_app_bar"
-            app:navigationIcon="@drawable/ic_menu_24dp"
+            app:navigationIcon="@drawable/ic_baseline_menu_24"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             />
 
@@ -26,6 +28,7 @@
         android:id="@+id/my_photo_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         />
 
 
