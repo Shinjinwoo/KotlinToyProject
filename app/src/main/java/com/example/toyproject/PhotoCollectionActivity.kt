@@ -1,8 +1,16 @@
 package com.example.toyproject
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.InputFilter
 import android.util.Log
+import android.view.Menu
+import android.widget.EditText
+import android.widget.SearchView
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
@@ -24,11 +32,10 @@ class PhotoCollectionActivity :AppCompatActivity(),RecyclerViewClickInterface {
 
     //어답터
     private lateinit var photoGridRecyclerViewAdapter: PhotoGridRecyclerViewAdapter
-
-
-
     lateinit var getResultText: ActivityResultLauncher<Intent>
 
+    private lateinit var  mSearchView: SearchView
+    private lateinit var  mSearchViewEditText: EditText
 
     //이 Activity에 대한 컨텍스트
     companion object {
@@ -51,6 +58,8 @@ class PhotoCollectionActivity :AppCompatActivity(),RecyclerViewClickInterface {
 
         top_app_bar.title = "현재검색어 : " + searchTerm
 
+        setSupportActionBar(top_app_bar)
+
         this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter(this)
         this.photoGridRecyclerViewAdapter.submitList(photoList)
 
@@ -66,8 +75,10 @@ class PhotoCollectionActivity :AppCompatActivity(),RecyclerViewClickInterface {
         getResultText =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val data = result.data?.getStringExtra("result")
-                    Log.d(TAG,"PhotoCollectionActivity - onCreate Called :: getData:$data")
+                    val dataUri = result.data?.data
+
+
+                    Log.d(TAG,"PhotoCollectionActivity - onCreate Called :: getData:${dataUri.toString()}")
                 }
             }
     }
@@ -85,5 +96,32 @@ class PhotoCollectionActivity :AppCompatActivity(),RecyclerViewClickInterface {
         getResultText.launch(intent)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
+        Log.d(TAG,"PhotoCollectionActivity - onCreateOptionsMenu Called")
+
+        var inflater = menuInflater
+
+        inflater.inflate(R.menu.top_app_bar_menu,menu)
+
+        var searchManager = getSystemService(Context.SEARCH_SERVICE ) as SearchManager
+
+        this.mSearchView = menu?.findItem(R.id.search_menu_item)?.actionView as SearchView
+        this.mSearchView.apply {
+
+            this.queryHint = "검색어를 입력 해주세요."
+
+            mSearchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text)
+        }
+
+        this.mSearchViewEditText.apply {
+            this.filters = arrayOf(InputFilter.LengthFilter(12))
+            this.setTextColor(Color.WHITE)
+            this.setHintTextColor(Color.WHITE)
+        }
+
+
+
+        return true
+    }
 }
