@@ -10,4 +10,5 @@
     <color name="colorPrimary">#EC407A</color>
     <color name="colorPrimaryDark">#EC407A</color>
     <color name="colorAccent">#EC407A</color>
+    <color name="colorLightPink">#E48686</color>
 </resources>
