@@ -210,7 +210,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
     }
 
 
-    fun searchPhotoFunction(userSearchInput: String ) {
+    private fun searchPhotoFunction(userSearchInput: String ) {
         RetrofitManager.instance.searchPhotos(searchTerm = userSearchInput , completion = {
                 responseState,responseDataArrayList ->
             when(responseState){
@@ -226,6 +226,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
                     intent.putExtra("search_term",userSearchInput)
 
                     startActivity(intent)
+                    finish()
 
                 }
                 RESPONSE_STATE.FAIL -> {
@@ -238,5 +239,12 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 }
             }
         })
+    }
+
+
+    override fun onDestroy() {
+        
+        Log.d(TAG,"PhotoCollectionActivity - onDestroy Called")
+        super.onDestroy()
     }
 }
