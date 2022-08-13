@@ -25,7 +25,7 @@ class PhotoItemViewHolder(itemView: View,recyclerViewClickInterface : RecyclerVi
     init {
         Log.d(TAG, "PhotoItemViewHolder - init() called")
 
-        itemView.setOnClickListener(this)
+        itemView.add_photo.setOnClickListener(this)
         this.mRecyclerViewInterface = recyclerViewClickInterface
     }
 
@@ -46,9 +46,13 @@ class PhotoItemViewHolder(itemView: View,recyclerViewClickInterface : RecyclerVi
 
     }
 
-    override fun onClick(p0: View?) {
-        Log.d(TAG,"MyViewHolder - onClick() called")
-        this.mRecyclerViewInterface?.onItemClicked(adapterPosition)
+    override fun onClick(view: View?) {
+        when(view){
+            view?.add_photo-> {
+                Log.d(TAG,"MyViewHolder - add_photo onClick() called")
+                this.mRecyclerViewInterface?.onItemClicked(adapterPosition)
+            }
+        }
     }
 
 }

@@ -10,7 +10,9 @@ import android.text.InputFilter
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.activity.result.ActivityResultCallback
@@ -28,8 +30,12 @@ import com.example.toyproject.utils.Constants.TAG
 import kotlinx.android.synthetic.main.activity_photo_collection.*
 import kotlinx.android.synthetic.main.layout_photo_item.*
 
-class PhotoCollectionActivity : AppCompatActivity(), RecyclerViewClickInterface,
-    SearchView.OnQueryTextListener {
+class PhotoCollectionActivity : AppCompatActivity(),
+    RecyclerViewClickInterface,
+    SearchView.OnQueryTextListener,
+    CompoundButton.OnCheckedChangeListener,
+    View.OnClickListener
+{
 
     //데이터
     var photoList = ArrayList<Photo>()
@@ -51,6 +57,10 @@ class PhotoCollectionActivity : AppCompatActivity(), RecyclerViewClickInterface,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_collection)
 
+
+        search_history_switch.setOnCheckedChangeListener(this)
+        search_history_mode_switch_label.setOnClickListener(this)
+        clear_search_history_btn.setOnClickListener(this)
 
         var bundle = intent.getBundleExtra("array_bundle")
         var searchTerm = intent.getStringExtra("search_term")
@@ -173,5 +183,25 @@ class PhotoCollectionActivity : AppCompatActivity(), RecyclerViewClickInterface,
 
         Log.d(TAG, "PhotoCollectionActivity - onQueryTextChange Called :: newText : $newText")
         return true
+    }
+
+    override fun onCheckedChanged(switchButtonView: CompoundButton?, isChecked: Boolean) {
+        when (switchButtonView) {
+            search_history_switch -> {
+                if (isChecked == true) {
+                    Log.d(TAG, "검색어 저장기능 온")
+                } else {
+                    Log.d(TAG,"검색어 저장기능 오프")
+                }
+            }
+        }
+    }
+
+    override fun onClick(view: View?) {
+        when(view) {
+            clear_search_history_btn-> {
+                Log.d(TAG,"검색기능 삭제 버튼 클릭")
+            }
+        }
     }
 }
