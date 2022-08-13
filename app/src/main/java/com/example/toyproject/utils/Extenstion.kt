@@ -3,6 +3,8 @@ package com.example.toyproject.utils
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import java.text.SimpleDateFormat
+import java.util.*
 
 //스트링에 대한 익스텐션 제이슨 배열인 아닌지
 
@@ -20,6 +22,11 @@ fun String?.isJsonArray():Boolean {
     }else {
         return false
     }
+}
+
+fun Date.toString() : String{
+    var format = SimpleDateFormat("HH:mm:ss")
+    return format.format(this)
 }
 
 

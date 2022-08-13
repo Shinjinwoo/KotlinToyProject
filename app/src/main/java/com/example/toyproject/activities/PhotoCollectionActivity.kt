@@ -1,10 +1,9 @@
-package com.example.toyproject
+package com.example.toyproject.activities
 
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
@@ -12,25 +11,24 @@ import android.view.Menu
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.EditText
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.toyproject.application.App
+import com.example.toyproject.R
 import com.example.toyproject.clickinterface.RecyclerViewClickInterface
 import com.example.toyproject.model.Photo
+import com.example.toyproject.model.SearchData
 import com.example.toyproject.recyclerview.PhotoGridRecyclerViewAdapter
 import com.example.toyproject.retrofit.RetrofitManager
 import com.example.toyproject.utils.Constants.TAG
 import com.example.toyproject.utils.RESPONSE_STATE
+import com.example.toyproject.utils.SharedPreferenceManager
 import kotlinx.android.synthetic.main.activity_photo_collection.*
-import kotlinx.android.synthetic.main.layout_photo_item.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PhotoCollectionActivity : AppCompatActivity(),
     RecyclerViewClickInterface,
@@ -49,9 +47,12 @@ class PhotoCollectionActivity : AppCompatActivity(),
     private lateinit var mSearchView: SearchView
     private lateinit var mSearchViewEditText: EditText
 
+    //검색 기록 배열
+    private var searchHistoryList = ArrayList<SearchData>()
+
     //이 Activity에 대한 컨텍스트
     companion object {
-        var instance: PhotoCollectionActivity? = null
+       var instance: PhotoCollectionActivity? = null
             private set
     }
 
@@ -69,10 +70,15 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
         photoList = bundle?.getSerializable("photo_array_list") as ArrayList<Photo>
 
-        Log.d(
-            TAG,
-            "PhotoCollectionActivity - onCreate Called :::: searchTerm : $searchTerm, photoArrayList : ${photoList.count()}"
-        )
+
+        //저장된 검색 기록 가져오기
+        this.searchHistoryList = SharedPreferenceManager.loadSearchHistoryList() as ArrayList<SearchData> /* = java.util.ArrayList<com.example.toyproject.model.SearchData> */
+
+        this.searchHistoryList.forEach{
+            Log.d(TAG,"저장된 검색 기록 - it.term : ${it.term}, it.timestamp : ${it.timestamp}")
+        }
+
+        Log.d( TAG, "PhotoCollectionActivity - onCreate Called :::: searchTerm : $searchTerm, photoArrayList : ${photoList.count()}")
 
 
         top_app_bar.title = "현재검색어 : $searchTerm"
@@ -124,8 +130,6 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
         inflater.inflate(R.menu.top_app_bar_menu, menu)
 
-        var searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-
         this.mSearchView = menu?.findItem(R.id.search_menu_item)?.actionView as SearchView
         this.mSearchView.apply {
 
@@ -165,7 +169,10 @@ class PhotoCollectionActivity : AppCompatActivity(),
         if (!query.isNullOrEmpty()) {
             this.top_app_bar.title = "현재검색어 : $query"
 
-            searchPhotoFunction(query)
+            var newSearchData = SearchData(term = query, timestamp = Date().toString() )
+            searchHistoryList.add(newSearchData)
+            SharedPreferenceManager.saveSearchHistoryList(this.searchHistoryList)
+            //searchPhotoFunction(query)
         }
         this.mSearchView.setQuery("",false)
         this.mSearchView.clearFocus()
@@ -216,7 +223,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
             when(responseState){
                 RESPONSE_STATE.SUCCESS -> {
                     Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size")
-                    var intent = Intent(this,PhotoCollectionActivity::class.java)
+                    var intent = Intent(this, PhotoCollectionActivity::class.java)
                     var bundle = Bundle()
 
                     bundle.putSerializable("photo_array_list",responseDataArrayList)

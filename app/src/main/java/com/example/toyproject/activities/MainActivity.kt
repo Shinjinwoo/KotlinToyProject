@@ -1,4 +1,4 @@
-package com.example.toyproject
+package com.example.toyproject.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.toyproject.R
 import com.example.toyproject.retrofit.RetrofitManager
 import com.example.toyproject.utils.Constants.TAG
 import com.example.toyproject.utils.RESPONSE_STATE
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             when(responseState){
                 RESPONSE_STATE.SUCCESS -> {
                     Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size")
-                    var intent = Intent(this,PhotoCollectionActivity::class.java)
+                    var intent = Intent(this, PhotoCollectionActivity::class.java)
                     var bundle = Bundle()
 
                     bundle.putSerializable("photo_array_list",responseDataArrayList)

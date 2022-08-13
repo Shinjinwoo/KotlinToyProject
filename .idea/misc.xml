@@ -5,27 +5,16 @@
       <map>
         <entry key="..\:/ToyProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1645" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_cake_24.xml" value="0.1645" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_delete_outline_24.xml" value="0.129" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.163" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.1495" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_photo_library_24.xml" value="0.1645" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.1495" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1495" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1645" />
         <entry key="..\:/ToyProject/app/src/main/res/drawable/ic_user.xml" value="0.1645" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/rounded_bg_gray.xml" value="0.163" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/rounded_bg_pink.xml" value="0.163" />
-        <entry key="..\:/ToyProject/app/src/main/res/drawable/unsplash_icon.xml" value="0.1495" />
         <entry key="..\:/ToyProject/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/ToyProject/app/src/main/res/layout/activity_photo_collection.xml" value="0.19123841617523168" />
         <entry key="..\:/ToyProject/app/src/main/res/layout/layout_button_search.xml" value="0.25" />
-        <entry key="..\:/ToyProject/app/src/main/res/layout/layout_photo_item.xml" value="0.33" />
-        <entry key="..\:/ToyProject/app/src/main/res/menu/top_app_bar.xml" value="0.22" />
-        <entry key="..\:/ToyProject/app/src/main/res/menu/top_app_bar_menu.xml" value="0.16510416666666666" />
+        <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.174" />
+        <entry key="app/src/main/res/layout/activity_photo_collection.xml" value="0.17135416666666667" />
       </map>
     </option>
   </component>
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

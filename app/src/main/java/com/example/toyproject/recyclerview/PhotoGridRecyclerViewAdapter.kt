@@ -1,15 +1,13 @@
 package com.example.toyproject.recyclerview
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.toyproject.PhotoCollectionActivity
+import com.example.toyproject.activities.PhotoCollectionActivity
 import com.example.toyproject.R
 import com.example.toyproject.application.App
 import com.example.toyproject.clickinterface.RecyclerViewClickInterface
 import com.example.toyproject.model.Photo
-import kotlinx.android.synthetic.main.layout_photo_item.view.*
 
 class PhotoGridRecyclerViewAdapter(recyclerViewClickInterface: RecyclerViewClickInterface)  : RecyclerView.Adapter<PhotoItemViewHolder>() {
 
