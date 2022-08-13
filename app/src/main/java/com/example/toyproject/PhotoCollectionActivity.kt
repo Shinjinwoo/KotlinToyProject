@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -17,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.toyproject.application.App
 import com.example.toyproject.clickinterface.RecyclerViewClickInterface
@@ -120,9 +122,11 @@ class PhotoCollectionActivity : AppCompatActivity(), RecyclerViewClickInterface,
             this.setOnQueryTextFocusChangeListener { _, hasExpended ->
                 when (hasExpended) {
                     true -> {
+                        search_history_view.visibility = View.VISIBLE
                         Log.d(TAG, "서치뷰 열림 ")
                     }
                     false -> {
+                        search_history_view.visibility = View.INVISIBLE
                         Log.d(TAG, "서치뷰 닫힘")
                     }
                 }
