@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.MediumComponent"
-            app:boxStrokeColor="@color/design_default_color_primary"
+            app:boxStrokeColor="@color/colorAccent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:helperText="검색어를 입력해 주세요."
             app:counterEnabled="true"
