@@ -67,7 +67,7 @@ class PhotoCollectionActivity :AppCompatActivity(),RecyclerViewClickInterface {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val data = result.data?.getStringExtra("result")
-                    Log.d("heec.choi", "getData:$data")
+                    Log.d(TAG,"PhotoCollectionActivity - onCreate Called :: getData:$data")
                 }
             }
     }
