@@ -26,7 +26,9 @@ import com.example.toyproject.application.App
 import com.example.toyproject.clickinterface.RecyclerViewClickInterface
 import com.example.toyproject.model.Photo
 import com.example.toyproject.recyclerview.PhotoGridRecyclerViewAdapter
+import com.example.toyproject.retrofit.RetrofitManager
 import com.example.toyproject.utils.Constants.TAG
+import com.example.toyproject.utils.RESPONSE_STATE
 import kotlinx.android.synthetic.main.activity_photo_collection.*
 import kotlinx.android.synthetic.main.layout_photo_item.*
 
@@ -162,6 +164,8 @@ class PhotoCollectionActivity : AppCompatActivity(),
         Log.d(TAG, "PhotoCollectionActivity - onQueryTextSubmit Called :: query : $query")
         if (!query.isNullOrEmpty()) {
             this.top_app_bar.title = "현재검색어 : $query"
+
+            searchPhotoFunction(query)
         }
         this.mSearchView.setQuery("",false)
         this.mSearchView.clearFocus()
@@ -203,5 +207,36 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 Log.d(TAG,"검색기능 삭제 버튼 클릭")
             }
         }
+    }
+
+
+    fun searchPhotoFunction(userSearchInput: String ) {
+        RetrofitManager.instance.searchPhotos(searchTerm = userSearchInput , completion = {
+                responseState,responseDataArrayList ->
+            when(responseState){
+                RESPONSE_STATE.SUCCESS -> {
+                    Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size")
+                    var intent = Intent(this,PhotoCollectionActivity::class.java)
+                    var bundle = Bundle()
+
+                    bundle.putSerializable("photo_array_list",responseDataArrayList)
+
+
+                    intent.putExtra("array_bundle",bundle)
+                    intent.putExtra("search_term",userSearchInput)
+
+                    startActivity(intent)
+
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Toast.makeText(this,"서버 리스폰스 에러 입니다.",Toast.LENGTH_SHORT).show()
+                    Log.d(TAG,"MainActivity - 서버 리스폰스 실패 : $responseDataArrayList")
+                }
+                RESPONSE_STATE.NO_COUNT -> {
+                    Toast.makeText(this,"검색결과가 없습니다.",Toast.LENGTH_SHORT).show()
+                    Log.d(TAG,"MainActivity - 검색결과가 없습니다. : $responseDataArrayList")
+                }
+            }
+        })
     }
 }

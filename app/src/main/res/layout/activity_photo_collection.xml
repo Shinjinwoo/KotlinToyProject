@@ -36,7 +36,7 @@
         android:id="@+id/search_history_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorLightPink"
+        android:background="#fff"
         android:orientation="vertical"
         android:visibility="invisible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
