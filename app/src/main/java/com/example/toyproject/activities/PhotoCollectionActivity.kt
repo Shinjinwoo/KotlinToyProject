@@ -330,12 +330,10 @@ class PhotoCollectionActivity : AppCompatActivity(),
         //해당 포지션의 검색어로 API 호출
         Log.d(TAG, "PhotoCollectionActivity - onSearchItemClick() called")
         var queryString = this.searchHistoryList[position].term
-
         searchPhotoFunction(queryString)
 
-        this.insertSearchTermHistory(searchTerm = queryString)
         top_app_bar.title = queryString
-
+        this.insertSearchTermHistory(searchTerm = queryString)
         top_app_bar.collapseActionView()
 
     }
