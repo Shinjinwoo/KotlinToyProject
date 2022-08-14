@@ -3,11 +3,13 @@ package com.example.toyproject.recyclerview
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.example.toyproject.clickinterface.SearchHistoryRecyViewClickInterface
 import com.example.toyproject.model.SearchData
 import com.example.toyproject.utils.Constants.TAG
 import kotlinx.android.synthetic.main.layout_search_item.view.*
 
-class SearchItemViewHolder(itemView: View)
+class SearchItemViewHolder(itemView: View,
+                           searchHistoryRecyViewClickInterface: SearchHistoryRecyViewClickInterface)
                         : RecyclerView.ViewHolder(itemView),
                             View.OnClickListener{
 
@@ -17,10 +19,13 @@ class SearchItemViewHolder(itemView: View)
     private var deleteSearchBtn = itemView.delete_search_btn
     private var constraintSearchItem = itemView.constraint_search_item
 
+    private var mSearchHistoryRecyViewClickInterface : SearchHistoryRecyViewClickInterface? = null
+
 
     init {
-        deleteSearchBtn.setOnClickListener(this)
-        constraintSearchItem.setOnClickListener(this)
+        this.deleteSearchBtn.setOnClickListener(this)
+        this.constraintSearchItem.setOnClickListener(this)
+        this.mSearchHistoryRecyViewClickInterface = searchHistoryRecyViewClickInterface
     }
 
     // 데이터와 뷰를 묶는 행위

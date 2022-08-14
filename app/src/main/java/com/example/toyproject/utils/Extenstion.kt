@@ -24,7 +24,7 @@ fun String?.isJsonArray():Boolean {
     }
 }
 
-fun Date.toString() : String{
+fun Date.toSimpleString() : String {
     var format = SimpleDateFormat("HH:mm:ss")
     return format.format(this)
 }

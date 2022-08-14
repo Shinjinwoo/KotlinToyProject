@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.toyproject.R
 import com.example.toyproject.clickinterface.RecyclerViewClickInterface
+import com.example.toyproject.clickinterface.SearchHistoryRecyViewClickInterface
 import com.example.toyproject.model.Photo
 import com.example.toyproject.model.SearchData
 import com.example.toyproject.recyclerview.PhotoGridRecyclerViewAdapter
@@ -28,12 +29,14 @@ import com.example.toyproject.retrofit.RetrofitManager
 import com.example.toyproject.utils.Constants.TAG
 import com.example.toyproject.utils.RESPONSE_STATE
 import com.example.toyproject.utils.SharedPreferenceManager
+import com.example.toyproject.utils.toSimpleString
 import kotlinx.android.synthetic.main.activity_photo_collection.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class PhotoCollectionActivity : AppCompatActivity(),
     RecyclerViewClickInterface,
+    SearchHistoryRecyViewClickInterface,
     SearchView.OnQueryTextListener,
     CompoundButton.OnCheckedChangeListener,
     View.OnClickListener
@@ -164,7 +167,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
         if (!query.isNullOrEmpty()) {
             this.top_app_bar.title = "현재검색어 : $query"
 
-            var newSearchData = SearchData(term = query, timestamp = Date().toString() )
+            var newSearchData = SearchData(term = query, timestamp = Date().toSimpleString() )
             searchHistoryList.add(newSearchData)
             SharedPreferenceManager.saveSearchHistoryList(this.searchHistoryList)
             //searchPhotoFunction(query)
@@ -282,5 +285,13 @@ class PhotoCollectionActivity : AppCompatActivity(),
         my_photo_recyclerview.layoutManager =
             GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         my_photo_recyclerview.adapter = this.photoGridRecyclerViewAdapter
+    }
+
+    override fun onSearchItemDeleteBtnClick(position: Int) {
+        //해당 포지션의 아이탬 삭제
+    }
+
+    override fun onSearchItemClick(position: Int) {
+        //해당 포지션의 검색어로 API 호출
     }
 }

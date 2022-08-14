@@ -4,11 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toyproject.R
+import com.example.toyproject.clickinterface.SearchHistoryRecyViewClickInterface
 import com.example.toyproject.model.SearchData
 
-class SearchHistoryRecyclerViewAdapter : RecyclerView.Adapter<SearchItemViewHolder>() {
+class SearchHistoryRecyclerViewAdapter(searchHistoryRecyViewClickInterface: SearchHistoryRecyViewClickInterface) : RecyclerView.Adapter<SearchItemViewHolder>() {
 
     private var searchHistoryList: ArrayList<SearchData> = ArrayList()
+    private var mSearchHistoryRecyViewClickInterface :SearchHistoryRecyViewClickInterface ? = null
+
+    init {
+        this.mSearchHistoryRecyViewClickInterface = searchHistoryRecyViewClickInterface
+    }
 
     //뷰홀더가 메모리에 올라갔을때 뷰홀더와 레이아웃을 연결 시킴.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchItemViewHolder {
