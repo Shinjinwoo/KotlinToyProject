@@ -38,7 +38,7 @@
         android:layout_height="match_parent"
         android:background="#fff"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         >
 

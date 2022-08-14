@@ -39,8 +39,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
     SearchHistoryRecyViewClickInterface,
     SearchView.OnQueryTextListener,
     CompoundButton.OnCheckedChangeListener,
-    View.OnClickListener
-{
+    View.OnClickListener {
 
     //데이터
     var photoList = ArrayList<Photo>()
@@ -58,7 +57,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
     //이 Activity에 대한 컨텍스트
     companion object {
-       var instance: PhotoCollectionActivity? = null
+        var instance: PhotoCollectionActivity? = null
             private set
     }
 
@@ -71,24 +70,44 @@ class PhotoCollectionActivity : AppCompatActivity(),
         search_history_mode_switch_label.setOnClickListener(this)
         clear_search_history_btn.setOnClickListener(this)
 
+
+        search_history_switch.isChecked = SharedPreferenceManager.checkSearchHistoryMode()
+
         var bundle = intent.getBundleExtra("array_bundle")
         var searchTerm = intent.getStringExtra("search_term")
+
+
 
         photoList = bundle?.getSerializable("photo_array_list") as ArrayList<Photo>
 
 
         //저장된 검색 기록 가져오기
-        this.searchHistoryList = SharedPreferenceManager.loadSearchHistoryList() as ArrayList<SearchData> /* = java.util.ArrayList<com.example.toyproject.model.SearchData> */
-        this.searchHistoryList.forEach{
-            Log.d(TAG,"저장된 검색 기록 - it.term : ${it.term}, it.timestamp : ${it.timestamp}")
+        this.searchHistoryList =
+            SharedPreferenceManager.loadSearchHistoryList() as ArrayList<SearchData> /* = java.util.ArrayList<com.example.toyproject.model.SearchData> */
+        this.searchHistoryList.forEach {
+            Log.d(TAG, "저장된 검색 기록 - it.term : ${it.term}, it.timestamp : ${it.timestamp}")
         }
+        handleSearchViewUI()
+
         // 검색 리사이클러 뷰 세팅
         this.searchHistoryRecyclerViewSet(this.searchHistoryList)
 
         // 사진 리사이클러 뷰 세팅
         this.photoSearchRecyclerViewSet(this.photoList)
 
-        Log.d( TAG, "PhotoCollectionActivity - onCreate Called :::: searchTerm : $searchTerm, photoArrayList : ${photoList.count()}")
+        if (searchTerm != null) {
+            if(searchTerm.isNotEmpty()){
+                var term = searchTerm?.let {
+                    it
+                }?: ""
+                this.insertSearchTermHistory(term)
+            }
+        }
+
+        Log.d(
+            TAG,
+            "PhotoCollectionActivity - onCreate Called :::: searchTerm : $searchTerm, photoArrayList : ${photoList.count()}"
+        )
         top_app_bar.title = "현재검색어 : $searchTerm"
 
         setSupportActionBar(top_app_bar)
@@ -101,7 +120,9 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 if (result.resultCode == RESULT_OK) {
                     val dataUri = result.data?.data
 
-                    Log.d(TAG, "PhotoCollectionActivity - onCreate Called :: getData:${dataUri.toString()}"
+                    Log.d(
+                        TAG,
+                        "PhotoCollectionActivity - onCreate Called :: getData:${dataUri.toString()}"
                     )
                 }
             }
@@ -137,6 +158,8 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 when (hasExpended) {
                     true -> {
                         search_history_view.visibility = View.VISIBLE
+
+                        handleSearchViewUI()
                         Log.d(TAG, "서치뷰 열림 ")
                     }
                     false -> {
@@ -167,12 +190,10 @@ class PhotoCollectionActivity : AppCompatActivity(),
         if (!query.isNullOrEmpty()) {
             this.top_app_bar.title = "현재검색어 : $query"
 
-            var newSearchData = SearchData(term = query, timestamp = Date().toSimpleString() )
-            searchHistoryList.add(newSearchData)
-            SharedPreferenceManager.saveSearchHistoryList(this.searchHistoryList)
-            //searchPhotoFunction(query)
+            this.insertSearchTermHistory(query)
+            this.searchPhotoFunction(query)
         }
-        this.mSearchView.setQuery("",false)
+        this.mSearchView.setQuery("", false)
         this.mSearchView.clearFocus()
         this.top_app_bar.collapseActionView()
 
@@ -182,12 +203,12 @@ class PhotoCollectionActivity : AppCompatActivity(),
     //
     override fun onQueryTextChange(newText: String?): Boolean {
 
-        var userInputText = newText ?.let {
+        var userInputText = newText?.let {
             it
-        }?: ""
+        } ?: ""
 
         if (userInputText.count() == 12) {
-            Toast.makeText(this,"검색어는 12자 까지만 입력 가능 합니다.",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "검색어는 12자 까지만 입력 가능 합니다.", Toast.LENGTH_SHORT).show()
         }
 
         Log.d(TAG, "PhotoCollectionActivity - onQueryTextChange Called :: newText : $newText")
@@ -199,69 +220,75 @@ class PhotoCollectionActivity : AppCompatActivity(),
             search_history_switch -> {
                 if (isChecked == true) {
                     Log.d(TAG, "검색어 저장기능 온")
+                    SharedPreferenceManager.setSearchHistoryMode(isActivate = true)
                 } else {
-                    Log.d(TAG,"검색어 저장기능 오프")
+                    Log.d(TAG, "검색어 저장기능 오프")
+                    SharedPreferenceManager.setSearchHistoryMode(isActivate = false)
+
                 }
             }
         }
     }
 
     override fun onClick(view: View?) {
-        when(view) {
-            clear_search_history_btn-> {
-                Log.d(TAG,"검색기능 삭제 버튼 클릭")
+        when (view) {
+            clear_search_history_btn -> {
+                Log.d(TAG, "검색기능 삭제 버튼 클릭")
+                SharedPreferenceManager.clearSearchHistoryList()
+                this.searchHistoryList.clear()
             }
         }
     }
 
 
-    private fun searchPhotoFunction(userSearchInput: String ) {
-        RetrofitManager.instance.searchPhotos(searchTerm = userSearchInput , completion = {
-                responseState,responseDataArrayList ->
-            when(responseState){
-                RESPONSE_STATE.SUCCESS -> {
-                    Log.d(TAG,"MainActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size")
-                    var intent = Intent(this, PhotoCollectionActivity::class.java)
-                    var bundle = Bundle()
+    private fun searchPhotoFunction(userSearchInput: String) {
+        RetrofitManager.instance.searchPhotos(
+            searchTerm = userSearchInput,
+            completion = { responseState, responseDataArrayList ->
+                when (responseState) {
+                    RESPONSE_STATE.SUCCESS -> {
+                        Log.d(
+                            TAG,
+                            "PhotoCollectionActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size"
+                        )
 
-                    bundle.putSerializable("photo_array_list",responseDataArrayList)
 
+                        if (responseDataArrayList != null) {
+                            this.photoList.clear()
+                            this.photoList = responseDataArrayList
+                            this.photoGridRecyclerViewAdapter.submitList(this.photoList)
+                            this.photoGridRecyclerViewAdapter.notifyDataSetChanged()
+                        }
 
-                    intent.putExtra("array_bundle",bundle)
-                    intent.putExtra("search_term",userSearchInput)
-
-                    startActivity(intent)
-                    finish()
-
+                    }
+                    RESPONSE_STATE.FAIL -> {
+                        Toast.makeText(this, "서버 리스폰스 에러 입니다.", Toast.LENGTH_SHORT).show()
+                        Log.d(TAG, "PhotoCollectionActivity - 서버 리스폰스 실패 : $responseDataArrayList")
+                    }
+                    RESPONSE_STATE.NO_COUNT -> {
+                        Toast.makeText(this, "검색결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                        Log.d(TAG, "PhotoCollectionActivity - 검색결과가 없습니다. : $responseDataArrayList")
+                    }
                 }
-                RESPONSE_STATE.FAIL -> {
-                    Toast.makeText(this,"서버 리스폰스 에러 입니다.",Toast.LENGTH_SHORT).show()
-                    Log.d(TAG,"MainActivity - 서버 리스폰스 실패 : $responseDataArrayList")
-                }
-                RESPONSE_STATE.NO_COUNT -> {
-                    Toast.makeText(this,"검색결과가 없습니다.",Toast.LENGTH_SHORT).show()
-                    Log.d(TAG,"MainActivity - 검색결과가 없습니다. : $responseDataArrayList")
-                }
-            }
-        })
+            })
     }
 
 
     override fun onDestroy() {
-        
-        Log.d(TAG,"PhotoCollectionActivity - onDestroy Called")
+
+        Log.d(TAG, "PhotoCollectionActivity - onDestroy Called")
         super.onDestroy()
     }
 
 
     // 검색 기록 리사이클러 뷰 셋팅
-    private fun searchHistoryRecyclerViewSet(searchHistoryList: ArrayList<SearchData>){
+    private fun searchHistoryRecyclerViewSet(searchHistoryList: ArrayList<SearchData>) {
 
-        this.searchHistoryRecyclerViewAdapter = SearchHistoryRecyclerViewAdapter()
+        this.searchHistoryRecyclerViewAdapter = SearchHistoryRecyclerViewAdapter(this)
         this.searchHistoryRecyclerViewAdapter.submitList(searchHistoryList)
 
         //리버스를 하게 되면 최신 데이터가 위로 올라가게 됨 오름차순
-        var linearLayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true)
+        var linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         linearLayoutManager.stackFromEnd = true
 
         search_history_recycler_view.apply {
@@ -273,7 +300,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
     private fun photoSearchRecyclerViewSet(photoList: ArrayList<Photo>) {
 
-        Log.d(TAG,"PhotoCollectionActivity - photoSearchRecyclerViewSet() called")
+        Log.d(TAG, "PhotoCollectionActivity - photoSearchRecyclerViewSet() called")
         this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter(this)
         this.photoGridRecyclerViewAdapter.submitList(photoList)
         /**
@@ -289,9 +316,72 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
     override fun onSearchItemDeleteBtnClick(position: Int) {
         //해당 포지션의 아이탬 삭제
+        Log.d(TAG, "PhotoCollectionActivity - Position : $position")
+
+        this.searchHistoryList.removeAt(position)
+
+        SharedPreferenceManager.saveSearchHistoryList(this.searchHistoryList)
+        //데이터가 변경됨을 알려줌
+        this.searchHistoryRecyclerViewAdapter.notifyDataSetChanged()
+        handleSearchViewUI()
     }
 
     override fun onSearchItemClick(position: Int) {
         //해당 포지션의 검색어로 API 호출
+        Log.d(TAG, "PhotoCollectionActivity - onSearchItemClick() called")
+        var queryString = this.searchHistoryList[position].term
+
+        searchPhotoFunction(queryString)
+        top_app_bar.title = queryString
+
+        this.insertSearchTermHistory(searchTerm = queryString)
+        this.top_app_bar.collapseActionView()
+
     }
+
+
+    private fun handleSearchViewUI() {
+        Log.d(
+            TAG,
+            "PhotoCollectionActivity - handleSearchViewUI() called / size : ${this.searchHistoryList.size}"
+        )
+
+        if (this.searchHistoryList.size > 0) {
+            search_history_recycler_view.visibility = View.VISIBLE
+            search_history_label.visibility = View.VISIBLE
+            clear_search_history_btn.visibility = View.VISIBLE
+        } else {
+            search_history_recycler_view.visibility = View.INVISIBLE
+            search_history_label.visibility = View.INVISIBLE
+            clear_search_history_btn.visibility = View.INVISIBLE
+        }
+    }
+
+    //검색어 저장 및 중복체크 필터링
+    private fun insertSearchTermHistory(searchTerm: String) {
+        if (SharedPreferenceManager.checkSearchHistoryMode() == true) {
+//            var newSearchData = SearchData(term = searchTerm, timestamp = Date().toSimpleString())
+            var indexListToRemove = ArrayList<Int>()
+
+            this.searchHistoryList.forEachIndexed{  index, searchDataItem ->
+                Log.d(TAG,"insertSearchTermHistory(searchTerm: String) called index : $index")
+                if(searchDataItem.term == searchTerm ) {
+                    indexListToRemove.add(index)
+                }
+            }
+            indexListToRemove.forEach{
+                this.searchHistoryList.removeAt(it)
+            }
+
+            //새 아이탬 넣기
+            var newSearchData = SearchData(term= searchTerm, timestamp = Date().toSimpleString())
+            this.searchHistoryList.add(newSearchData)
+
+            //기존 데이터에 덮어쓰기
+            SharedPreferenceManager.saveSearchHistoryList(this.searchHistoryList)
+            this.searchHistoryRecyclerViewAdapter.notifyDataSetChanged()
+        }
+    }
+
+
 }

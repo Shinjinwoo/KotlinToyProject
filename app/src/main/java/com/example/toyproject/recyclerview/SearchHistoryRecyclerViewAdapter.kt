@@ -22,6 +22,7 @@ class SearchHistoryRecyclerViewAdapter(searchHistoryRecyViewClickInterface: Sear
             LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.layout_search_item,parent,false)
+                , this.mSearchHistoryRecyViewClickInterface!!
         )
         return searchItemViewHolder
     }
@@ -33,7 +34,6 @@ class SearchHistoryRecyclerViewAdapter(searchHistoryRecyViewClickInterface: Sear
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
         var dataItem : SearchData = this.searchHistoryList[position]
         holder.bindWithView(dataItem)
-
     }
 
     //외부에서 데이타 어답터 배열을 넣어줌

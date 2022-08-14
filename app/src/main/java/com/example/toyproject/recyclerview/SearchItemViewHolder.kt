@@ -43,9 +43,11 @@ class SearchItemViewHolder(itemView: View,
         when(view){
             deleteSearchBtn -> {
                 Log.d(TAG,"SearchItemViewHolder - 삭제버튼 클릭")
+                this.mSearchHistoryRecyViewClickInterface?.onSearchItemDeleteBtnClick(adapterPosition)
             }
             constraintSearchItem -> {
                 Log.d(TAG,"SearchItemViewHolder -  검색 아이템 클릭")
+                this.mSearchHistoryRecyViewClickInterface?.onSearchItemClick(adapterPosition)
             }
             whenSearchedTextView -> {
 
