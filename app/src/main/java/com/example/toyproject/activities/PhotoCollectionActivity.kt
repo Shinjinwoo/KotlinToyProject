@@ -17,11 +17,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.toyproject.R
 import com.example.toyproject.clickinterface.RecyclerViewClickInterface
 import com.example.toyproject.model.Photo
 import com.example.toyproject.model.SearchData
 import com.example.toyproject.recyclerview.PhotoGridRecyclerViewAdapter
+import com.example.toyproject.recyclerview.SearchHistoryRecyclerViewAdapter
 import com.example.toyproject.retrofit.RetrofitManager
 import com.example.toyproject.utils.Constants.TAG
 import com.example.toyproject.utils.RESPONSE_STATE
@@ -42,6 +44,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
     //어답터
     private lateinit var photoGridRecyclerViewAdapter: PhotoGridRecyclerViewAdapter
+    private lateinit var searchHistoryRecyclerViewAdapter: SearchHistoryRecyclerViewAdapter
     lateinit var getResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mSearchView: SearchView
@@ -73,30 +76,22 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
         //저장된 검색 기록 가져오기
         this.searchHistoryList = SharedPreferenceManager.loadSearchHistoryList() as ArrayList<SearchData> /* = java.util.ArrayList<com.example.toyproject.model.SearchData> */
-
         this.searchHistoryList.forEach{
             Log.d(TAG,"저장된 검색 기록 - it.term : ${it.term}, it.timestamp : ${it.timestamp}")
         }
+        // 검색 리사이클러 뷰 세팅
+        this.searchHistoryRecyclerViewSet(this.searchHistoryList)
+
+        // 사진 리사이클러 뷰 세팅
+        this.photoSearchRecyclerViewSet(this.photoList)
 
         Log.d( TAG, "PhotoCollectionActivity - onCreate Called :::: searchTerm : $searchTerm, photoArrayList : ${photoList.count()}")
-
-
         top_app_bar.title = "현재검색어 : $searchTerm"
 
         setSupportActionBar(top_app_bar)
 
-        this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter(this)
-        this.photoGridRecyclerViewAdapter.submitList(photoList)
 
-        /**
-         * @param1 Context
-         * @param2 Span 줄 수
-         * @param3 Vertical,Horizon
-         * @param4 데이터 출력방향,
-         */
-        my_photo_recyclerview.layoutManager =
-            GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
-        my_photo_recyclerview.adapter = this.photoGridRecyclerViewAdapter
+
 
         getResultText =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -253,5 +248,39 @@ class PhotoCollectionActivity : AppCompatActivity(),
         
         Log.d(TAG,"PhotoCollectionActivity - onDestroy Called")
         super.onDestroy()
+    }
+
+
+    // 검색 기록 리사이클러 뷰 셋팅
+    private fun searchHistoryRecyclerViewSet(searchHistoryList: ArrayList<SearchData>){
+
+        this.searchHistoryRecyclerViewAdapter = SearchHistoryRecyclerViewAdapter()
+        this.searchHistoryRecyclerViewAdapter.submitList(searchHistoryList)
+
+        //리버스를 하게 되면 최신 데이터가 위로 올라가게 됨 오름차순
+        var linearLayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true)
+        linearLayoutManager.stackFromEnd = true
+
+        search_history_recycler_view.apply {
+            layoutManager = linearLayoutManager
+            this.scrollToPosition(searchHistoryRecyclerViewAdapter.itemCount - 1)
+            adapter = searchHistoryRecyclerViewAdapter
+        }
+    }
+
+    private fun photoSearchRecyclerViewSet(photoList: ArrayList<Photo>) {
+
+        Log.d(TAG,"PhotoCollectionActivity - photoSearchRecyclerViewSet() called")
+        this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter(this)
+        this.photoGridRecyclerViewAdapter.submitList(photoList)
+        /**
+         * @param1 Context
+         * @param2 Span 줄 수
+         * @param3 Vertical,Horizon
+         * @param4 데이터 출력방향,
+         */
+        my_photo_recyclerview.layoutManager =
+            GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+        my_photo_recyclerview.adapter = this.photoGridRecyclerViewAdapter
     }
 }

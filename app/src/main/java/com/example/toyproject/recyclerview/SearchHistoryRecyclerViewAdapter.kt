@@ -25,6 +25,8 @@ class SearchHistoryRecyclerViewAdapter : RecyclerView.Adapter<SearchItemViewHold
     }
 
     override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
+        var dataItem : SearchData = this.searchHistoryList[position]
+        holder.bindWithView(dataItem)
 
     }
 

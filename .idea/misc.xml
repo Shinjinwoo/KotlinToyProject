@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.129" />
         <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.174" />
         <entry key="app/src/main/res/layout/activity_photo_collection.xml" value="0.26948775055679286" />
+        <entry key="app/src/main/res/layout/layout_button_search.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/layout_photo_item.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/layout_search_item.xml" value="0.335" />
       </map>
