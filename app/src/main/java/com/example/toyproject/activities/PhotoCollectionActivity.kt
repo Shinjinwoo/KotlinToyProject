@@ -332,10 +332,11 @@ class PhotoCollectionActivity : AppCompatActivity(),
         var queryString = this.searchHistoryList[position].term
 
         searchPhotoFunction(queryString)
-        top_app_bar.title = queryString
 
         this.insertSearchTermHistory(searchTerm = queryString)
-        this.top_app_bar.collapseActionView()
+        top_app_bar.title = queryString
+
+        top_app_bar.collapseActionView()
 
     }
 
