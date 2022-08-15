@@ -43,7 +43,7 @@ object RetrofitClient {
                         try {
                             Log.d(TAG, JSONObject(message).toString(4))
                         } catch (e: Exception) {
-                            Log.d(TAG, e.toString())
+                            Log.d(TAG, "RetrofitClient - log() called : $e")
                         }
                     }
                 }

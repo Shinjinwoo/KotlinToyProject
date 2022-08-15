@@ -70,6 +70,8 @@ class PhotoCollectionActivity : AppCompatActivity(),
         search_history_mode_switch_label.setOnClickListener(this)
         clear_search_history_btn.setOnClickListener(this)
 
+        setSupportActionBar(top_app_bar)
+
 
         search_history_switch.isChecked = SharedPreferenceManager.checkSearchHistoryMode()
 
@@ -110,7 +112,6 @@ class PhotoCollectionActivity : AppCompatActivity(),
         )
         top_app_bar.title = "현재검색어 : $searchTerm"
 
-        setSupportActionBar(top_app_bar)
 
 
 
@@ -195,7 +196,6 @@ class PhotoCollectionActivity : AppCompatActivity(),
         }
         this.mSearchView.setQuery("", false)
         this.mSearchView.clearFocus()
-        this.top_app_bar.collapseActionView()
 
         return true
     }
@@ -236,6 +236,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 Log.d(TAG, "검색기능 삭제 버튼 클릭")
                 SharedPreferenceManager.clearSearchHistoryList()
                 this.searchHistoryList.clear()
+                this.top_app_bar.collapseActionView()
             }
         }
     }
@@ -334,7 +335,10 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
         top_app_bar.title = queryString
         this.insertSearchTermHistory(searchTerm = queryString)
-        top_app_bar.collapseActionView()
+        //top_app_bar.collapseActionView()
+
+        //this.mSearchView.setQuery("", false)
+        this.mSearchView.clearFocus()
 
     }
 
