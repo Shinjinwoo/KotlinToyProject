@@ -30,8 +30,14 @@ import com.example.toyproject.utils.Constants.TAG
 import com.example.toyproject.utils.RESPONSE_STATE
 import com.example.toyproject.utils.SharedPreferenceManager
 import com.example.toyproject.utils.toSimpleString
+import com.jakewharton.rxbinding4.widget.textChanges
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_photo_collection.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class PhotoCollectionActivity : AppCompatActivity(),
@@ -54,6 +60,11 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
     //검색 기록 배열
     private var searchHistoryList = ArrayList<SearchData>()
+
+
+    //RxCompositeDisposable
+    //옵저버를 통합해서 제거하기 위한 CompositeDisposable
+    private var mCompositeDisposable = CompositeDisposable()
 
     //이 Activity에 대한 컨텍스트
     companion object {
@@ -98,10 +109,10 @@ class PhotoCollectionActivity : AppCompatActivity(),
         this.photoSearchRecyclerViewSet(this.photoList)
 
         if (searchTerm != null) {
-            if(searchTerm.isNotEmpty()){
+            if (searchTerm.isNotEmpty()) {
                 var term = searchTerm?.let {
                     it
-                }?: ""
+                } ?: ""
                 this.insertSearchTermHistory(term)
             }
         }
@@ -158,7 +169,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
             this.setOnQueryTextFocusChangeListener { _, hasExpended ->
                 when (hasExpended) {
                     true -> {
-                        search_history_view.visibility = View.VISIBLE
+                        //search_history_view.visibility = View.VISIBLE
 
                         handleSearchViewUI()
                         Log.d(TAG, "서치뷰 열림 ")
@@ -171,6 +182,35 @@ class PhotoCollectionActivity : AppCompatActivity(),
             }
 
             mSearchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text)
+            // 써치뷰 에딧텍스트 옵저버 생성
+            val editTextChangeObservable = mSearchViewEditText.textChanges()
+
+            var searchEditTextSubscription: Disposable =
+                // 옵저버블에 오퍼레이터를 추가
+                editTextChangeObservable
+                    .debounce(800, TimeUnit.MILLISECONDS)
+                    // 글자가 입력되고 나서 0.8초에 onNext 이벤트로 데이터 흘려보내기
+                    .subscribeOn(Schedulers.io())
+                    //구독을 통해 이벤트 응답 받기
+                    .subscribeBy(
+                        onNext = {
+                            Log.d("RX", "onNext : $it")
+                            //들어온 이벤트 데이터로 api 호출
+                            if (it.isNotEmpty()) {
+                                searchPhotoFunction(it.toString())
+                            }
+                        },
+                        onComplete = {
+                            Log.d("RX", "onComplete")
+                        },
+                        onError = {
+                            Log.d("RX", "onError : $it")
+                        }
+                    )
+
+            //살아있는 옵저버블을 compositeDisposable 추가
+            mCompositeDisposable.add(searchEditTextSubscription)
+
         }
 
         this.mSearchViewEditText.apply {
@@ -209,6 +249,11 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
         if (userInputText.count() == 12) {
             Toast.makeText(this, "검색어는 12자 까지만 입력 가능 합니다.", Toast.LENGTH_SHORT).show()
+        }
+
+        if (userInputText.length in 1..12) {
+            //계속 API를 호출하게 됨
+            //searchPhotoFunction(userInputText)
         }
 
         Log.d(TAG, "PhotoCollectionActivity - onQueryTextChange Called :: newText : $newText")
@@ -278,6 +323,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
     override fun onDestroy() {
 
         Log.d(TAG, "PhotoCollectionActivity - onDestroy Called")
+        this.mCompositeDisposable.clear()
         super.onDestroy()
     }
 
@@ -366,18 +412,18 @@ class PhotoCollectionActivity : AppCompatActivity(),
 //            var newSearchData = SearchData(term = searchTerm, timestamp = Date().toSimpleString())
             var indexListToRemove = ArrayList<Int>()
 
-            this.searchHistoryList.forEachIndexed{  index, searchDataItem ->
-                Log.d(TAG,"insertSearchTermHistory(searchTerm: String) called index : $index")
-                if(searchDataItem.term == searchTerm ) {
+            this.searchHistoryList.forEachIndexed { index, searchDataItem ->
+                Log.d(TAG, "insertSearchTermHistory(searchTerm: String) called index : $index")
+                if (searchDataItem.term == searchTerm) {
                     indexListToRemove.add(index)
                 }
             }
-            indexListToRemove.forEach{
+            indexListToRemove.forEach {
                 this.searchHistoryList.removeAt(it)
             }
 
             //새 아이탬 넣기
-            var newSearchData = SearchData(term= searchTerm, timestamp = Date().toSimpleString())
+            var newSearchData = SearchData(term = searchTerm, timestamp = Date().toSimpleString())
             this.searchHistoryList.add(newSearchData)
 
             //기존 데이터에 덮어쓰기
