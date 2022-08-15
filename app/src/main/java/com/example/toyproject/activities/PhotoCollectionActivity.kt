@@ -169,7 +169,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
             this.setOnQueryTextFocusChangeListener { _, hasExpended ->
                 when (hasExpended) {
                     true -> {
-                        //search_history_view.visibility = View.VISIBLE
+                        search_history_view.visibility = View.VISIBLE
 
                         handleSearchViewUI()
                         Log.d(TAG, "서치뷰 열림 ")
