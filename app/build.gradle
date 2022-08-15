@@ -55,6 +55,17 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 
 
+    //Rxjava : 메인 비동기처리 라이브러리
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    //RxKotlin : 코틀린용으로 추가
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    //RxAndroid : 안드로이드에서 쓰는 스레드를 스케쥴러 최적화
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    //RxBinding : editText등의 안드로이드 뷰 컴포넌트들과 연결 해주는 라이브러리
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+
+
+
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
