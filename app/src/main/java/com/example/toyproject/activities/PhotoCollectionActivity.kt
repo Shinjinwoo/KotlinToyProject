@@ -236,7 +236,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 Log.d(TAG, "검색기능 삭제 버튼 클릭")
                 SharedPreferenceManager.clearSearchHistoryList()
                 this.searchHistoryList.clear()
-                this.top_app_bar.collapseActionView()
+                this.mSearchView.clearFocus()
             }
         }
     }
