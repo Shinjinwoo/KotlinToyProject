@@ -5,8 +5,8 @@ import android.app.Application
 class App : Application() {
 
     companion object {
-        lateinit  var instance : App
-        private set
+        lateinit var instance: App
+            private set
     }
 
     override fun onCreate() {
