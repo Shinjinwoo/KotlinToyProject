@@ -108,7 +108,6 @@ class MainActivity : AppCompatActivity() {
                     intent.putExtra("search_term",userSearchInput)
 
                     startActivity(intent)
-
                 }
                 RESPONSE_STATE.FAIL -> {
                     Toast.makeText(this,"서버 리스폰스 에러 입니다.",Toast.LENGTH_SHORT).show()
