@@ -210,6 +210,10 @@ class PhotoCollectionActivity : AppCompatActivity(),
 
             //살아있는 옵저버블을 compositeDisposable 추가
             mCompositeDisposable.add(searchEditTextSubscription)
+            //디스포서블에 대한 추가적인 학습이 필요해 보임.
+
+            // 그리고 저는 민지가 참 좋아요 ㅎㅎㅎ
+            // todo 민지랑 여행가기
 
         }
 
