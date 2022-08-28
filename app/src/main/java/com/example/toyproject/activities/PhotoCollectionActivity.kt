@@ -231,6 +231,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
     //서치뷰 검색 이벤트
     //검색 버튼 클릭이 되었을때
     override fun onQueryTextSubmit(query: String?): Boolean {
+        //코틀린 문법
         Log.d(TAG, "PhotoCollectionActivity - onQueryTextSubmit Called :: query : $query")
         if (!query.isNullOrEmpty()) {
             this.top_app_bar.title = "현재검색어 : $query"
