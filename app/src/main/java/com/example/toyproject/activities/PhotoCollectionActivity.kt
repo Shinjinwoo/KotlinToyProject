@@ -296,6 +296,8 @@ class PhotoCollectionActivity : AppCompatActivity(),
                         Log.d(
                             TAG,
                             "PhotoCollectionActivity - 서버 리스폰스 성공 : $responseDataArrayList?.size"
+                        // completion에 대한 아주 정확한 이해가 필요.
+
                         )
 
 
