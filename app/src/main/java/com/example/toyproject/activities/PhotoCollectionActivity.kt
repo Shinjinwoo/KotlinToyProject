@@ -185,6 +185,8 @@ class PhotoCollectionActivity : AppCompatActivity(),
             // 써치뷰 에딧텍스트 옵저버 생성
             val editTextChangeObservable = mSearchViewEditText.textChanges()
 
+
+
             var searchEditTextSubscription: Disposable =
                 // 옵저버블에 오퍼레이터를 추가
                 editTextChangeObservable
