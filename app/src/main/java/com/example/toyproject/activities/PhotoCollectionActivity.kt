@@ -192,6 +192,7 @@ class PhotoCollectionActivity : AppCompatActivity(),
                 editTextChangeObservable
                     .debounce(800, TimeUnit.MILLISECONDS)
                     // 글자가 입력되고 나서 0.8초에 onNext 이벤트로 데이터 흘려보내기
+                        // 800은 ms
                     .subscribeOn(Schedulers.io())
                     //구독을 통해 이벤트 응답 받기
                     .subscribeBy(
