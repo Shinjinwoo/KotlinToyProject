@@ -17,7 +17,7 @@ enum class RESPONSE_STATE {
 
 object API {
     const val BASE_URL = "https://api.unsplash.com"
-    const val CLIENT_ID = "비밀입니당"
+    const val CLIENT_ID = "비밀입니당1111"
     const val SEARCH_PHOTO = "/search/photos"
     const val SEARCH_USERS = "search/users"
 }
